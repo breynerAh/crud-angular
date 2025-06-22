@@ -1,0 +1,17 @@
+<section class="container">
+  <h1>Usuarios</h1>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form">
+    <label for="identification"> Identificación:</label>
+    <input type="email" id="identification" formControlName="identification" />
+
+    <label for="name">Nombre:</label>
+    <input type="text" id="name" formControlName="name" />
+
+    <label for="email">Correo:</label>
+    <input type="email" id="email" formControlName="email" />
+
+    <div class="button-container">
+      <button type="submit">enviar</button>
+    </div>
+  </form>
+</section>
