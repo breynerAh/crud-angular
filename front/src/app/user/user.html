@@ -1,14 +1,32 @@
 <section class="container">
   <h1>Usuarios</h1>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form">
-    <label for="identification"> Identificación:</label>
-    <input type="email" id="identification" formControlName="identification" />
+    <mat-label> Identificación:</mat-label>
+    <input id="identification" formControlName="identification" matInput />
+    <mat-error
+      *ngIf="userForm.get('identification')?.hasError('required') && (userForm.get('identification')?.touched || formSubmitted)"
+      class="error"
+    >
+      Campo obligatorio
+    </mat-error>
 
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" formControlName="name" />
+    <mat-label>Nombre:</mat-label>
+    <input id="name" formControlName="name" matInput />
+    <mat-error
+      *ngIf="userForm.get('name')?.hasError('required') && (userForm.get('name')?.touched || formSubmitted)"
+      class="error"
+    >
+      Campo obligatorio
+    </mat-error>
 
-    <label for="email">Correo:</label>
-    <input type="email" id="email" formControlName="email" />
+    <mat-label>Correo:</mat-label>
+    <input type="email" id="email" formControlName="email" matInput />
+    <mat-error
+      *ngIf="userForm.get('email')?.hasError('required') && (userForm.get('email')?.touched || formSubmitted)"
+      class="error"
+    >
+      Campo obligatorio
+    </mat-error>
 
     <div class="button-container">
       <button type="submit">enviar</button>

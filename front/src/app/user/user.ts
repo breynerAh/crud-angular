@@ -1,19 +1,33 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../services/user.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-user-component',
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
   templateUrl: './user.html',
   styleUrl: './user.scss',
 })
 export class UserComponent implements OnInit {
-  userForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    identification: new FormControl(''),
+  formBuilder = inject(FormBuilder);
+  formSubmitted = false;
+
+  userForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    email: ['', Validators.required],
+    identification: ['', Validators.required],
   });
 
   router = inject(Router);
@@ -36,18 +50,27 @@ export class UserComponent implements OnInit {
   }
 
   onSubmit() {
+    this.formSubmitted = true;
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
+    const user = this.userForm.getRawValue();
+
     if (!this.idUser) {
-      this.userService.createUser(this.userForm.value).subscribe({
+      this.userService.createUser(user).subscribe({
         next: (response) => {
           console.log('Creado exitosamente: ', response);
           this.userForm.reset();
+          this.formSubmitted = false;
         },
         error: (error) => {
           console.error('Ha ocurrido un error :', error);
         },
       });
     } else {
-      this.userService.updateUser(this.idUser, this.userForm.value).subscribe({
+      this.userService.updateUser(this.idUser, user).subscribe({
         next: (response) => {
           console.log('Actualizado exitosamente: ', response);
           this.userForm.reset();
